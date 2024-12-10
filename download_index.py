@@ -1,4 +1,6 @@
 # A script to download data from the xeno-canto API.
+# Run this with:
+#   uv run download_index.py
 
 import requests
 import time
