@@ -10,13 +10,7 @@ import time
 def download_recording(recording_id: str, url: str) -> bool:
     """
     Download a single xeno-canto recording and save it as MP3.
-
-    Args:
-        recording_id (str): The ID of the recording
-        url (str): The URL from xeno-canto API
-
-    Returns:
-        bool: True if a download happened
+    Skips files larger than 10MB.
     """
     output_path = f"data/{recording_id}.mp3"
 
@@ -26,7 +20,15 @@ def download_recording(recording_id: str, url: str) -> bool:
         return False
 
     try:
-        # First request gets the download URL
+        # Check file size first with HEAD request
+        head_response = requests.head(url, allow_redirects=True)
+        size_mb = int(head_response.headers.get("content-length", 0)) / (1024 * 1024)
+
+        if size_mb > 10:
+            print(f"Skipping {recording_id}: file too large ({size_mb:.1f}MB)")
+            return False
+
+        # Proceed with download if file is small enough
         response = requests.get(url, allow_redirects=True)
         response.raise_for_status()
 
