@@ -10,7 +10,6 @@ import time
 def download_recording(recording_id: str, url: str) -> bool:
     """
     Download a single xeno-canto recording and save it as MP3.
-    Skips files larger than 10MB.
     """
     output_path = f"data/{recording_id}.mp3"
 
@@ -20,15 +19,6 @@ def download_recording(recording_id: str, url: str) -> bool:
         return False
 
     try:
-        # Check file size first with HEAD request
-        head_response = requests.head(url, allow_redirects=True)
-        size_mb = int(head_response.headers.get("content-length", 0)) / (1024 * 1024)
-
-        if size_mb > 10:
-            print(f"Skipping {recording_id}: file too large ({size_mb:.1f}MB)")
-            return False
-
-        # Proceed with download if file is small enough
         response = requests.get(url, allow_redirects=True)
         response.raise_for_status()
 
@@ -67,13 +57,12 @@ def download_all():
                 print(
                     f"Progress: {i}/{total_files} files processed, {downloaded_count} new downloads"
                 )
+                if i < total_files:  # Don't sleep after the last file
+                    time.sleep(1)
             else:
                 print(
                     f"Progress: {i}/{total_files} files processed, {downloaded_count} new downloads"
                 )
-
-            if i < total_files:  # Don't sleep after the last file
-                time.sleep(1)
 
     print(f"\nDownload complete! Downloaded {downloaded_count} new files")
 
