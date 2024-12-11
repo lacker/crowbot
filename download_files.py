@@ -11,7 +11,10 @@ def download_recording(recording_id: str, url: str) -> bool:
     """
     Download a single xeno-canto recording and save it as MP3.
     """
-    output_path = f"data/{recording_id}.mp3"
+    # Create mp3s directory if it doesn't exist
+    Path("data/mp3s").mkdir(parents=True, exist_ok=True)
+
+    output_path = f"data/mp3s/{recording_id}.mp3"
 
     # Skip if file already exists
     if Path(output_path).exists():
