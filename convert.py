@@ -11,7 +11,7 @@ import re
 import numpy as np
 import pandas as pd
 from datasets import Dataset, DatasetDict, Features, Image, Value
-from diffusers.pipelines.audio_diffusion import Mel
+from diffusers import Mel
 from tqdm.auto import tqdm
 
 logging.basicConfig(level=logging.WARN)
@@ -95,4 +95,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Running convert.py")
     main()
